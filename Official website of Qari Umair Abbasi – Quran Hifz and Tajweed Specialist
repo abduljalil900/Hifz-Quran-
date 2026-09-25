@@ -1,0 +1,1675 @@
+from pathlib import Path
+import zipfile
+
+root = Path("/mnt/data/qari_umair_abbasi_revised")
+root.mkdir(exist_ok=True)
+
+html = r'''
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="Qari Umair Abbasi is a renowned Quran Hifz and Tajweed specialist with more than two decades of teaching experience. He has guided many students in memorising the Quran and developing strong, accurate recitation with a calm and disciplined method." />
+    <title>Qari Umair Abbasi | Quran Hifz &amp; Tajweed Specialist</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+
+    <style>
+        :root {
+            --green-900: #0d2a1e;
+            --green-800: #153f31;
+            --green-700: #1d563e;
+            --green-600: #2b6d50;
+            --gold-400: #d7af53;
+            --gold-300: #efce76;
+            --cream: #f7f2e8;
+            --white: #ffffff;
+            --text: #1d2a22;
+            --muted: #53665d;
+            --shadow: 0 18px 42px rgba(13, 42, 30, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #f5efe5 0%, #f8f5ee 100%);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        p {
+            margin: 0 0 18px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin: 0 0 16px;
+            line-height: 1.2;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        .container {
+            width: min(1160px, calc(100% - 28px));
+            margin: 0 auto;
+        }
+
+        .section {
+            padding: 90px 0;
+        }
+
+        /* =========================================================
+       TOP BAR
+       ========================================================= */
+        .topbar {
+            background: #0d2a1e;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.88rem;
+            padding: 10px 0;
+        }
+
+        .topbar-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .topbar-links {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .topbar-links a:hover {
+            color: var(--gold-300);
+        }
+
+        /* =========================================================
+       HEADER
+       ========================================================= */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(247, 242, 232, 0.94);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(13, 42, 30, 0.08);
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 16px 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            color: var(--green-900);
+        }
+
+        .brand-mark {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--gold-300), var(--gold-400));
+            color: var(--green-900);
+            font-family: "Amiri", serif;
+            font-size: 1.65rem;
+        }
+
+        .brand-name {
+            font-size: 1.02rem;
+            letter-spacing: 0.05em;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            color: var(--green-900);
+            font-weight: 600;
+        }
+
+        .nav a {
+            position: relative;
+        }
+
+        .nav a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 0;
+            height: 2px;
+            background: var(--gold-400);
+            transition: width 0.25s ease;
+        }
+
+        .nav a:hover::after {
+            width: 100%;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            padding: 14px 26px;
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold-300), var(--gold-400));
+            color: var(--green-900);
+            box-shadow: 0 12px 28px rgba(215, 175, 83, 0.35);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 16px 34px rgba(215, 175, 83, 0.45);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: var(--white);
+        }
+
+        .mobile-toggle {
+            display: none;
+            border: none;
+            background: transparent;
+            color: var(--green-900);
+            font-size: 2rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        /* =========================================================
+       HERO
+       ========================================================= */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background:
+                linear-gradient(120deg,
+                    rgba(5, 28, 20, 0.93),
+                    rgba(13, 61, 43, 0.78),
+                    rgba(29, 86, 62, 0.62)),
+                url("https://images.unsplash.com/photo-1652499543755-9dff40b5622e?auto=format&fit=crop&w=2200&q=85") center / cover no-repeat;
+            color: var(--white);
+            padding: 90px 0 80px;
+            isolation: isolate;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 75% 35%,
+                    rgba(239, 206, 118, 0.16),
+                    transparent 30%),
+                linear-gradient(90deg,
+                    rgba(2, 22, 16, 0.32),
+                    transparent 50%,
+                    rgba(2, 22, 16, 0.22));
+            animation: backgroundGlow 8s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            right: -160px;
+            top: -180px;
+            border: 1px solid rgba(239, 206, 118, 0.22);
+            border-radius: 50%;
+            box-shadow:
+                0 0 0 35px rgba(239, 206, 118, 0.035),
+                0 0 0 70px rgba(239, 206, 118, 0.02);
+            animation: heroRing 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes backgroundGlow {
+            from {
+                opacity: 0.45;
+                transform: scale(1);
+            }
+
+            to {
+                opacity: 0.95;
+                transform: scale(1.07);
+            }
+        }
+
+        @keyframes heroRing {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.12fr 0.88fr;
+            gap: 50px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: var(--gold-300);
+        }
+
+        .hero h1 {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(2.8rem, 5vw, 4.7rem);
+            color: var(--white);
+            margin-top: 18px;
+        }
+
+        .hero p {
+            max-width: 650px;
+            color: rgba(255, 255, 255, 0.84);
+            font-size: 1.08rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-top: 26px;
+        }
+
+        .hero-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            padding: 24px;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(140px, 1fr));
+            gap: 18px;
+            margin-top: 28px;
+        }
+
+        .hero-stat {
+            background: rgba(255, 255, 255, 0.055);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 18px;
+            padding: 18px 12px;
+        }
+
+        .hero-stat strong {
+            display: block;
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            color: var(--gold-300);
+        }
+
+        .hero-stat span {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* =========================================================
+       HERO QURAN IMAGE
+       ========================================================= */
+        .image-panel {
+            position: relative;
+            min-width: 0;
+        }
+
+        .quran-hero-image {
+            position: relative;
+            width: 100%;
+            min-height: 560px;
+            border-radius: 30px;
+            overflow: hidden;
+            border: 1px solid rgba(239, 206, 118, 0.38);
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.38),
+                0 0 45px rgba(215, 175, 83, 0.12);
+            animation: quranFloat 6s ease-in-out infinite;
+            background: #123f31;
+        }
+
+        .quran-hero-image img {
+            width: 100%;
+            height: 100%;
+            min-height: 560px;
+            object-fit: cover;
+            object-position: center;
+            transform: scale(1.03);
+            animation: quranZoom 14s ease-in-out infinite alternate;
+        }
+
+        .quran-image-overlay {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg,
+                    rgba(5, 25, 18, 0.04) 0%,
+                    rgba(5, 25, 18, 0.1) 42%,
+                    rgba(5, 25, 18, 0.9) 100%);
+        }
+
+        .quran-label {
+            position: absolute;
+            left: 24px;
+            right: 24px;
+            bottom: 24px;
+            color: white;
+            z-index: 2;
+            padding: 20px;
+            border-radius: 18px;
+            background: rgba(5, 28, 20, 0.62);
+            border: 1px solid rgba(239, 206, 118, 0.35);
+            backdrop-filter: blur(10px);
+        }
+
+        .quran-label span {
+            display: block;
+            color: var(--gold-300);
+            font-family: "Amiri", serif;
+            font-size: 1.9rem;
+            line-height: 1.25;
+            margin-bottom: 5px;
+        }
+
+        .quran-label strong {
+            display: block;
+            font-size: 1.1rem;
+            letter-spacing: 0.04em;
+        }
+
+        .quran-label small {
+            display: block;
+            margin-top: 4px;
+            color: rgba(255, 255, 255, 0.72);
+        }
+
+        .floating-box {
+            position: absolute;
+            left: -18px;
+            bottom: 22px;
+            transform: translateY(85%);
+            background: rgba(255, 255, 255, 0.97);
+            color: var(--green-900);
+            border-radius: 20px;
+            padding: 18px 16px;
+            max-width: 250px;
+            box-shadow: var(--shadow);
+            z-index: 5;
+        }
+
+        .floating-box strong {
+            display: block;
+            font-size: 1.08rem;
+            margin-bottom: 6px;
+        }
+
+        .floating-box span {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        @keyframes quranFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes quranZoom {
+            from {
+                transform: scale(1.03);
+            }
+
+            to {
+                transform: scale(1.1);
+            }
+        }
+
+        /* =========================================================
+       STATS
+       ========================================================= */
+        .stats {
+            background: rgba(13, 42, 30, 0.04);
+            border-top: 1px solid rgba(13, 42, 30, 0.08);
+            border-bottom: 1px solid rgba(13, 42, 30, 0.08);
+            padding: 26px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(150px, 1fr));
+            gap: 18px;
+            text-align: center;
+        }
+
+        .stat-box strong {
+            display: block;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            color: var(--green-800);
+        }
+
+        .stat-box span {
+            color: var(--muted);
+        }
+
+        /* =========================================================
+       GENERAL SECTIONS
+       ========================================================= */
+        .section-title {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(2.1rem, 4vw, 3rem);
+            color: var(--green-900);
+        }
+
+        .lead {
+            max-width: 720px;
+            color: var(--muted);
+            font-size: 1.08rem;
+        }
+
+        .about-grid,
+        .contact-grid,
+        .schedule-wrap,
+        .faculty-wrap,
+        .online-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 36px;
+            align-items: center;
+        }
+
+        .about-image img,
+        .portrait img {
+            width: 100%;
+            min-height: 440px;
+            object-fit: cover;
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        .about-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 28px;
+        }
+
+        .about-image::after {
+            content: "";
+            position: absolute;
+            inset: 14px;
+            border: 1px solid rgba(239, 206, 118, 0.45);
+            border-radius: 20px;
+            pointer-events: none;
+        }
+
+        .check-list {
+            list-style: none;
+            padding: 0;
+            margin: 26px 0 0;
+            display: grid;
+            gap: 12px;
+        }
+
+        .check-list li {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .check {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: rgba(45, 109, 80, 0.12);
+            color: var(--green-700);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        /* =========================================================
+       PROGRAMS / FEATURES
+       ========================================================= */
+        .program-grid,
+        .features-grid,
+        .testimonial-grid {
+            display: grid;
+            gap: 26px;
+        }
+
+        .program-grid {
+            grid-template-columns: repeat(3, minmax(220px, 1fr));
+        }
+
+        .features-grid {
+            grid-template-columns: repeat(4, minmax(180px, 1fr));
+        }
+
+        .testimonial-grid {
+            grid-template-columns: repeat(3, minmax(220px, 1fr));
+        }
+
+        .card {
+            background: var(--white);
+            border: 1px solid rgba(13, 42, 30, 0.06);
+            border-radius: 24px;
+            padding: 28px 22px;
+            box-shadow: 0 12px 24px rgba(13, 42, 30, 0.04);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 38px rgba(13, 42, 30, 0.1);
+        }
+
+        .program-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg,
+                    rgba(45, 109, 80, 0.12),
+                    rgba(215, 175, 83, 0.14));
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+        }
+
+        .card p {
+            color: var(--muted);
+            margin-bottom: 18px;
+        }
+
+        .small-badge {
+            display: inline-block;
+            background: rgba(13, 42, 30, 0.04);
+            padding: 8px 10px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            color: var(--green-800);
+            font-weight: 700;
+        }
+
+        .feature-card {
+            background: linear-gradient(180deg,
+                    rgba(255, 255, 255, 1),
+                    rgba(247, 242, 232, 1));
+        }
+
+        .feature-card .icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: rgba(13, 42, 30, 0.06);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .list {
+            list-style: none;
+            padding: 0;
+            margin: 18px 0 0;
+            display: grid;
+            gap: 12px;
+        }
+
+        .list li {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .list li::before {
+            content: "✦";
+            color: var(--gold-400);
+            font-weight: 800;
+        }
+
+        /* =========================================================
+       FACULTY / QARI SECTION
+       ========================================================= */
+        .portrait {
+            position: relative;
+            background: linear-gradient(135deg,
+                    rgba(29, 86, 62, 0.08),
+                    rgba(215, 175, 83, 0.14));
+            border: 1px solid rgba(13, 42, 30, 0.08);
+            border-radius: 30px;
+            padding: 24px;
+            overflow: hidden;
+        }
+
+        .portrait::before {
+            content: "";
+            position: absolute;
+            width: 190px;
+            height: 190px;
+            border-radius: 50%;
+            right: -75px;
+            top: -75px;
+            border: 1px solid rgba(215, 175, 83, 0.35);
+            box-shadow:
+                0 0 0 25px rgba(215, 175, 83, 0.035),
+                0 0 0 50px rgba(215, 175, 83, 0.02);
+            pointer-events: none;
+        }
+
+        .portrait img {
+            min-height: 520px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .scholar-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 18px 0 12px;
+        }
+
+        .tag {
+            background: rgba(29, 86, 62, 0.08);
+            border: 1px solid rgba(29, 86, 62, 0.12);
+            padding: 8px 12px;
+            border-radius: 999px;
+            color: var(--green-800);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* =========================================================
+       ONLINE
+       ========================================================= */
+        .online-box {
+            background:
+                linear-gradient(180deg,
+                    rgba(13, 42, 30, 0.97),
+                    rgba(29, 86, 62, 0.94));
+            color: var(--white);
+        }
+
+        .online-box .section-title {
+            color: var(--white);
+        }
+
+        .online-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
+            padding: 24px;
+        }
+
+        /* =========================================================
+       BANNER
+       ========================================================= */
+        .banner {
+            background: linear-gradient(135deg,
+                    rgba(215, 175, 83, 0.18),
+                    rgba(45, 109, 80, 0.08));
+        }
+
+        .banner-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            background: var(--white);
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        .banner-box h3 {
+            font-size: clamp(1.8rem, 4vw, 2.4rem);
+        }
+
+        /* =========================================================
+       CONTACT / FORM
+       ========================================================= */
+        .contact-card {
+            background: var(--white);
+            border-radius: 26px;
+            padding: 30px 24px;
+            box-shadow: 0 10px 22px rgba(13, 42, 30, 0.04);
+        }
+
+        .contact-card .icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(45, 109, 80, 0.08);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        form {
+            display: grid;
+            gap: 16px;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            border: 1px solid rgba(13, 42, 30, 0.12);
+            border-radius: 14px;
+            padding: 14px 16px;
+            background: rgba(247, 242, 232, 0.9);
+            color: var(--text);
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--gold-400);
+            box-shadow: 0 0 0 3px rgba(215, 175, 83, 0.12);
+        }
+
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        /* =========================================================
+       FOOTER
+       ========================================================= */
+        .footer {
+            background: #0d2a1e;
+            color: rgba(255, 255, 255, 0.82);
+            padding: 30px 0;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+        @media (max-width: 980px) {
+            .nav {
+                position: absolute;
+                top: calc(100% + 10px);
+                left: 14px;
+                right: 14px;
+                background: rgba(255, 255, 255, 0.98);
+                border: 1px solid rgba(13, 42, 30, 0.08);
+                border-radius: 18px;
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 18px 20px;
+                box-shadow: var(--shadow);
+            }
+
+            .nav.open {
+                display: flex;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .header-inner>.btn-primary {
+                display: none;
+            }
+
+            .hero-grid,
+            .about-grid,
+            .schedule-wrap,
+            .online-grid,
+            .faculty-wrap,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .program-grid,
+            .features-grid,
+            .testimonial-grid,
+            .stats-grid {
+                grid-template-columns: repeat(2, minmax(200px, 1fr));
+            }
+
+            .floating-box {
+                left: 14px;
+                transform: translateY(72%);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .section {
+                padding: 70px 0;
+            }
+
+            .program-grid,
+            .features-grid,
+            .testimonial-grid,
+            .stats-grid,
+            .field-row {
+                grid-template-columns: 1fr;
+            }
+
+            .header-inner {
+                padding: 13px 0;
+            }
+
+            .topbar-inner {
+                align-items: flex-start;
+            }
+
+            .topbar-links {
+                gap: 8px 14px;
+            }
+
+            .hero {
+                padding: 65px 0 70px;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .hero-actions .btn {
+                width: 100%;
+            }
+
+            .quran-hero-image,
+            .quran-hero-image img {
+                min-height: 450px;
+            }
+
+            .floating-box {
+                position: relative;
+                left: 0;
+                bottom: auto;
+                transform: none;
+                margin-top: 14px;
+                max-width: 100%;
+            }
+
+            .about-image img,
+            .portrait img {
+                min-height: 360px;
+            }
+
+            .banner-box {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .banner-box .btn {
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- =======================================================
+       TOP CONTACT BAR
+       ======================================================= -->
+    <div class="topbar">
+        <div class="container topbar-inner">
+            <span>Quran Hifz &amp; Tajweed Expert • Muslim Town, Rawalpindi</span>
+
+            <div class="topbar-links">
+                <a href="tel:+923125102463">📞 0312-5102463</a>
+                <a href="tel:+923260431339">📞 0326-0431339</a>
+                <a href="mailto:abbasiumair345@gmail.com">✉ abbasiumair345@gmail.com</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- =======================================================
+       HEADER
+       ======================================================= -->
+    <header class="header">
+        <div class="container header-inner">
+            <a href="#home" class="brand">
+                <span class="brand-mark">ق</span>
+                <span class="brand-name">QARI UMAIR ABBASI</span>
+            </a>
+
+            <nav class="nav" id="nav">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#programmes">Programs</a>
+                <a href="#why">Why Me</a>
+                <a href="#contact">Contact</a>
+            </nav>
+
+            <a href="#contact" class="btn btn-primary">Book a Class</a>
+
+            <button class="mobile-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+                ☰
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- =====================================================
+         HERO
+         ===================================================== -->
+        <section class="hero" id="home">
+            <div class="container hero-grid">
+                <div>
+                    <div class="eyebrow">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ</div>
+
+                    <h1>Qari Umair Abbasi</h1>
+
+                    <p style="font-size: 1.18rem; font-weight: 600; color: var(--white);">
+                        Quran Hifz &amp; Tajweed Specialist
+                    </p>
+
+                    <p>
+                        Dedicated to helping children and adults recite the Quran with
+                        clarity, confidence, and correct Tajweed while building a lifelong
+                        connection with the words of Allah.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="#contact" class="btn btn-primary">Book Online Class</a>
+                        <a href="#programmes" class="btn btn-secondary">View Programs</a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <strong>20+</strong>
+                            <span>Years Experience</span>
+                        </div>
+
+                        <div class="hero-stat">
+                            <strong>1000+</strong>
+                            <span>Students Guided</span>
+                        </div>
+
+                        <div class="hero-stat">
+                            <strong>Hifz</strong>
+                            <span>Quran Memorization</span>
+                        </div>
+
+                        <div class="hero-stat">
+                            <strong>Tajweed</strong>
+                            <span>Correct Recitation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Animated Quran image -->
+                <div class="image-panel">
+                    <div class="quran-hero-image">
+                        <img src="https://images.unsplash.com/photo-1652499543755-9dff40b5622e?auto=format&fit=crop&w=1400&q=85"
+                            alt="Open Quran on a wooden stand inside a mosque" />
+
+                        <div class="quran-image-overlay"></div>
+
+                        <div class="quran-label">
+                            <span>القرآن الكريم</span>
+                            <strong>Quranic Excellence</strong>
+                            <small>Hifz • Tajweed • Recitation</small>
+                        </div>
+                    </div>
+
+                    <div class="floating-box">
+                        <strong>Slow-Method Specialist</strong>
+                        <span>
+                            Focused memorisation, accurate Tajweed, and individual pacing
+                            for every student.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+         STATS
+         ===================================================== -->
+        <section class="stats" aria-label="Qari Umair Abbasi statistics">
+            <div class="container stats-grid">
+                <div class="stat-box">
+                    <strong>20+</strong>
+                    <span>Years of Quran Excellence</span>
+                </div>
+
+                <div class="stat-box">
+                    <strong>Hifz</strong>
+                    <span>Memorization Coaching</span>
+                </div>
+
+                <div class="stat-box">
+                    <strong>Tajweed</strong>
+                    <span>Correct Pronunciation</span>
+                </div>
+
+                <div class="stat-box">
+                    <strong>Online</strong>
+                    <span>Worldwide Sessions</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+         ABOUT
+         ===================================================== -->
+        <section class="section" id="about">
+            <div class="container about-grid">
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1652499543755-9dff40b5622e?auto=format&fit=crop&w=1600&q=85"
+                        alt="Beautiful Islamic mosque interior" loading="lazy" />
+                </div>
+
+                <div>
+                    <div class="eyebrow"
+                        style="background: rgba(29,86,62,0.08); color: var(--green-700); border-color: rgba(29,86,62,0.12);">
+                        About Qari Umair
+                    </div>
+
+                    <h2 class="section-title">
+                        A dedicated teacher of the Quran and its recitation.
+                    </h2>
+
+                    <p class="lead">
+                        Qari Umair Abbasi is a renowned Quran Hifz and Tajweed specialist
+                        with more than two decades of teaching experience. He has guided
+                        many students in memorising the Quran and developing strong,
+                        accurate recitation with a calm and disciplined method.
+                    </p>
+
+                    <p class="lead">
+                        His teaching style is rooted in patience, structure, and sincerity.
+                        He focuses on correct Makharij, Sifaat, revision, and long-term
+                        retention so that students build not only memorisation but a
+                        lasting bond with the Quran.
+                    </p>
+
+                    <ul class="check-list">
+                        <li>
+                            <span class="check">✓</span>
+                            Quran Hifz with slow and effective memorisation method
+                        </li>
+
+                        <li>
+                            <span class="check">✓</span>
+                            Tajweed training for beginners and advanced learners
+                        </li>
+
+                        <li>
+                            <span class="check">✓</span>
+                            Individual attention for children and adults
+                        </li>
+
+                        <li>
+                            <span class="check">✓</span>
+                            Online and face-to-face classes worldwide
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+         PROGRAMMES
+         ===================================================== -->
+        <section class="section" id="programmes">
+            <div class="container">
+                <div style="text-align: center; margin-bottom: 36px;">
+                    <div class="eyebrow"
+                        style="background: rgba(29,86,62,0.08); color: var(--green-700); border-color: rgba(29,86,62,0.12);">
+                        Programs
+                    </div>
+
+                    <h2 class="section-title">
+                        Quran learning programs designed for real progress.
+                    </h2>
+                </div>
+
+                <div class="program-grid">
+                    <article class="card">
+                        <div class="program-icon">📖</div>
+                        <h3>Hifz ul Quran</h3>
+
+                        <p>
+                            Memorise the Quran with a structured, gradual system that
+                            emphasizes retention, revision, and spiritual growth.
+                        </p>
+
+                        <ul class="list">
+                            <li>Daily memorisation and revision</li>
+                            <li>Strong retention and repetition</li>
+                            <li>Personalised learning pace</li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <div class="program-icon">🎧</div>
+                        <h3>Tajweed Course</h3>
+
+                        <p>
+                            Learn the art of correct Quranic recitation through proper
+                            pronunciation, rules, and fluent practice.
+                        </p>
+
+                        <ul class="list">
+                            <li>Makharij and Sifaat explained clearly</li>
+                            <li>Quranic recitation correction</li>
+                            <li>Ideal for kids and adults</li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <div class="program-icon">💻</div>
+                        <h3>Online Quran Classes</h3>
+
+                        <p>
+                            Flexible online sessions delivered through live, interactive
+                            classes with regular feedback and guidance.
+                        </p>
+
+                        <ul class="list">
+                            <li>One-on-one live learning</li>
+                            <li>Zoom / WhatsApp support</li>
+                            <li>Available worldwide</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+         WHY
+         ===================================================== -->
+        <section class="section" style="padding-top: 0;" id="why">
+            <div class="container features-grid">
+                <article class="card feature-card">
+                    <div class="icon">✨</div>
+                    <h3>Slow &amp; Effective Method</h3>
+                    <p>
+                        Each lesson is taught in a patient, structured way so students
+                        truly understand and retain what they learn.
+                    </p>
+                </article>
+
+                <article class="card feature-card">
+                    <div class="icon">🧠</div>
+                    <h3>Focused Revision</h3>
+                    <p>
+                        Regular review cycles ensure the memorised Quran remains strong
+                        and lasting for years.
+                    </p>
+                </article>
+
+                <article class="card feature-card">
+                    <div class="icon">🎯</div>
+                    <h3>Correct Tajweed</h3>
+                    <p>
+                        Students learn proper rules of recitation with attention to
+                        detail, accuracy, and fluency.
+                    </p>
+                </article>
+
+                <article class="card feature-card">
+                    <div class="icon">🌍</div>
+                    <h3>Global Access</h3>
+                    <p>
+                        Online classes allow students from anywhere in the world to learn
+                        with guidance and care.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <!-- =====================================================
+         FEATURED QARI
+         ===================================================== -->
+        <section class="section" id="faculty">
+            <div class="container faculty-wrap">
+                <div class="portrait">
+                    <img src="https://images.unsplash.com/photo-1652499543755-9dff40b5622e?auto=format&fit=crop&w=1600&q=85"
+                        alt="Quran on a rehal in a mosque environment" loading="lazy" />
+                </div>
+
+                <div>
+                    <div class="eyebrow"
+                        style="background: rgba(29,86,62,0.08); color: var(--green-700); border-color: rgba(29,86,62,0.12);">
+                        Featured Scholar • Qari Umair Abbasi
+                    </div>
+
+                    <div
+                        style="display: flex; align-items: center; gap: 10px; margin: 18px 0 10px; color: var(--gold-400); font-size: 1.6rem;">
+                        <span>ع</span>
+                        <span>✦</span>
+                    </div>
+
+                    <h2 class="section-title" style="margin-bottom: 10px;">
+                        Qari Umair Abbasi
+                    </h2>
+
+                    <p
+                        style="font-family: 'Amiri', serif; font-size: 1.8rem; font-weight: 700; color: var(--green-800); margin-bottom: 10px;">
+                        قاری عمیر عباسی
+                    </p>
+
+                    <p style="font-size: 1.05rem; font-weight: 700; color: var(--green-800); margin-bottom: 12px;">
+                        Hifz ul Quran Expert
+                    </p>
+
+                    <div class="scholar-meta">
+                        <span class="tag">20+ Years Experience</span>
+                        <span class="tag">International Trainer</span>
+                        <span class="tag">Slow-Method Specialist</span>
+                    </div>
+
+                    <p class="lead" style="margin: 0;">
+                        Qari Umair Abbasi brings more than two decades of dedicated
+                        experience in Hifz ul Quran instruction. Having trained numerous
+                        Huffaz at an international level, he is renowned for his unique
+                        slow, structured memorisation method — ensuring each student
+                        builds a rock-solid, lasting relationship with the words of Allah.
+                    </p>
+
+                    <p class="lead" style="margin-top: 18px;">
+                        His approach prioritises correct Tajweed, strong revision cycles,
+                        and individualised pacing — producing Huffaz who retain the Quran
+                        for life. He is available for both face-to-face classes and live
+                        online sessions worldwide.
+                    </p>
+
+                    <div
+                        style="margin-top: 22px; margin-bottom: 10px; font-size: 1.05rem; font-weight: 700; color: var(--green-900);">
+                        Contact Qari Umair Abbasi Directly
+                    </div>
+
+                    <div style="display: grid; gap: 6px; color: var(--text); font-weight: 600; margin-bottom: 22px;">
+                        <a href="tel:+923125102463">0312-5102463</a>
+                        <a href="tel:+923260431339">0326-0431339</a>
+                        <a href="mailto:abbasiumair345@gmail.com">abbasiumair345@gmail.com</a>
+                    </div>
+
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px;">
+                        <a href="mailto:abbasiumair345@gmail.com?subject=Online%20Quran%20Class%20Enquiry"
+                            class="btn btn-primary">
+                            Book Online Class
+                        </a>
+
+                        <a href="#contact" class="btn"
+                            style="color: var(--green-900); border: 1px solid rgba(29,86,62,0.15); background: rgba(29,86,62,0.04);">
+                            Face-to-Face at Madrasa
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+         ONLINE LEARNING
+         ===================================================== -->
+        <section class="section online-box">
+            <div class="container online-grid">
+                <div>
+                    <div class="eyebrow">Online Quran Teaching</div>
+
+                    <h2 class="section-title">
+                        Learn Quran and Tajweed from anywhere in the world.
+                    </h2>
+
+                    <p style="color: rgba(255,255,255,0.78); font-size: 1.05rem;">
+                        Online teaching is available for children and adults through
+                        structured live sessions with individual guidance, correction,
+                        revision and regular progress support.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="mailto:abbasiumair345@gmail.com?subject=Online%20Quran%20Class%20Enquiry"
+                            class="btn btn-primary">
+                            Enquire Online
+                        </a>
+
+                        <a href="tel:+923125102463" class="btn btn-secondary">
+                            Call Qari Umair
+                        </a>
+                    </div>
+                </div>
+
+                <div class="online-card">
+                    <h3 style="font-size: 1.7rem;">Online Learning Includes</h3>
+
+                    <ul class="list">
+                        <li>One-to-one live Quran instruction</li>
+                        <li>Hifz ul Quran memorisation guidance</li>
+                        <li>Tajweed and pronunciation correction</li>
+                        <li>Makharij and Sifaat practice</li>
+                        <li>Regular revision and progress feedback</li>
+                        <li>Children and adult learning options</li>
+                        <li>Flexible international online access</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+         ADMISSIONS BANNER
+         ===================================================== -->
+        <section class="section banner">
+            <div class="container">
+                <div class="banner-box">
+                    <div>
+                        <div class="eyebrow"
+                            style="background: rgba(29,86,62,0.08); color: var(--green-700); border-color: rgba(29,86,62,0.12);">
+                            Admissions
+                        </div>
+
+                        <h3>Limited Seats Available</h3>
+
+                        <p style="margin: 0; color: var(--muted);">
+                            Now enrolling students for Hifz, Tajweed, and structured Quran
+                            learning programs.
+                        </p>
+                    </div>
+
+                    <a href="#contact" class="btn btn-primary">Apply for Admission</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+         CONTACT
+         ===================================================== -->
+        <section class="section" id="contact">
+            <div class="container contact-grid">
+                <div class="contact-card">
+                    <div class="eyebrow"
+                        style="background: rgba(29,86,62,0.08); color: var(--green-700); border-color: rgba(29,86,62,0.12);">
+                        Contact
+                    </div>
+
+                    <h2 class="section-title" style="margin-top: 16px;">
+                        Book Your Quran Class
+                    </h2>
+
+                    <div class="contact-item">
+                        <div class="icon">📞</div>
+                        <div>
+                            <strong>Phone</strong><br />
+                            <a href="tel:+923125102463">0312-5102463</a><br />
+                            <a href="tel:+923260431339">0326-0431339</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="icon">✉️</div>
+                        <div>
+                            <strong>Email</strong><br />
+                            <a href="mailto:abbasiumair345@gmail.com">
+                                abbasiumair345@gmail.com
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="icon">📍</div>
+                        <div>
+                            <strong>Location</strong><br />
+                            Muslim Town, Rawalpindi<br />
+                            Near Transformer Chowk
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <h3 style="font-size: 1.9rem; color: var(--green-900);">
+                        Admission Enquiry
+                    </h3>
+
+                    <p style="color: var(--muted); margin-bottom: 22px;">
+                        Submit your enquiry and your email application will open
+                        automatically.
+                    </p>
+
+                    <form id="contactForm">
+                        <div class="field-row">
+                            <input id="fullName" type="text" placeholder="Student / Guardian Full Name"
+                                aria-label="Full name" required />
+
+                            <input id="phone" type="tel" placeholder="Contact Number" aria-label="Contact number"
+                                required />
+                        </div>
+
+                        <div class="field-row">
+                            <select id="program" aria-label="Program" required>
+                                <option value="">Select programme…</option>
+                                <option>Hifz ul Quran</option>
+                                <option>Tajweed</option>
+                                <option>Online Quran Classes</option>
+                                <option>Kids & Adults</option>
+                            </select>
+
+                            <input id="email" type="email" placeholder="Email Address" aria-label="Email address" />
+                        </div>
+
+                        <textarea id="message" placeholder="Message (Optional)" aria-label="Message"></textarea>
+
+                        <button type="submit" class="btn btn-primary">
+                            Submit Enquiry
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- =======================================================
+       FOOTER
+       ======================================================= -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div>
+                <strong style="display: block; color: var(--white); font-size: 1.1rem; margin-bottom: 6px;">
+                    Qari Umair Abbasi
+                </strong>
+                <span>Quran Hifz &amp; Tajweed Expert</span>
+            </div>
+
+            <div>
+                <div>Muslim Town, Rawalpindi</div>
+                <div>Near Transformer Chowk</div>
+            </div>
+
+            <div>
+                <a href="tel:+923125102463">0312-5102463</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- =======================================================
+       JAVASCRIPT
+       ======================================================= -->
+    <script>
+        const menuToggle = document.getElementById("menuToggle");
+        const nav = document.getElementById("nav");
+
+        menuToggle.addEventListener("click", () => {
+            const isOpen = nav.classList.toggle("open");
+            menuToggle.setAttribute("aria-expanded", String(isOpen));
+        });
+
+        nav.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                nav.classList.remove("open");
+                menuToggle.setAttribute("aria-expanded", "false");
+            });
+        });
+
+        const contactForm = document.getElementById("contactForm");
+
+        contactForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const fullName = document.getElementById("fullName").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const program = document.getElementById("program").value;
+            const email = document.getElementById("email").value.trim();
+            const message = document.getElementById("message").value.trim();
+
+            const subject = encodeURIComponent(
+                "Qari Umair Abbasi - Quran Class / Admission Enquiry"
+            );
+
+            const body = encodeURIComponent(
+                `Assalamu Alaikum,
+
+I would like to enquire about Quran education with Qari Umair Abbasi.
+
+Name: ${fullName}
+Contact Number: ${phone}
+Programme: ${program}
+Email: ${email || "Not provided"}
+
+Message:
+${message || "No additional message."}
+
+Location:
+Muslim Town, Rawalpindi
+Near Transformer Chowk
+
+JazakAllah Khair.`
+            );
+
+            window.location.href =
+                `mailto:abbasiumair345@gmail.com?subject=${subject}&body=${body}`;
+        });
+    </script>
+</body>
+
+</html>
+'''
+
+path = root / "index.html"
+path.write_text(html, encoding="utf-8")
+
+zip_path = Path("/mnt/data/Qari_Umair_Abbasi_Revised_Website.zip")
+with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+z.write(path, "index.html")
+
+print(f"Created: {path}")
+print(f"Created: {zip_path}")
+print("The revised website is a single self-contained HTML file with CSS and JavaScript.")
